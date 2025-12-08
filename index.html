@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brave Builder's | A Unit of Brave Group</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;500;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            /* NEW THEME COLORS */
+            --primary: #2e6979;       /* Requested Teal */
+            --primary-light: #3a8296; /* Lighter Teal for hovers */
+            --accent: #e09f3e;        /* Golden Bronze - Syncs perfectly with Teal */
+            --accent-hover: #c48b36;  /* Darker Bronze */
+            
+            /* NEUTRALS */
+            --bg-light: #f4f8f9;      /* Very slight cool tint to match teal */
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #586870;    /* Muted Slate */
+            --border: #e2e8f0;
+            
+            /* LAYOUT */
+            --max-width: 1200px;
+            --header-height: 80px;
+            --shadow-sm: 0 4px 6px -1px rgba(46, 105, 121, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(46, 105, 121, 0.15), 0 10px 10px -5px rgba(46, 105, 121, 0.04);
+        }
+
+        /* --- RESET & BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Archivo', sans-serif;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        a { text-decoration: none; transition: all 0.3s ease; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; }
+
+        /* --- UTILITY CLASSES FOR ANIMATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            box-shadow: var(--shadow-sm);
+            height: 70px;
+        }
+
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .main-logo {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .main-logo:hover { transform: scale(1.05); }
+
+        .nav-links { display: flex; gap: 2.5rem; }
+        .nav-links a { 
+            color: var(--text-dark); 
+            font-weight: 600; 
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        /* Modern Underline Hover Effect */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .cta-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 14px 0 rgba(46, 105, 121, 0.39);
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+        .cta-btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 105, 121, 0.23);
+            background: var(--primary-light);
+            color: white;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            position: relative;
+            background-color: var(--primary);
+            height: 90vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            color: white;
+            padding: 0 2rem;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Updated Gradient RGB to match #2e6979 */
+            background-image: linear-gradient(rgba(46, 105, 121, 0.9), rgba(46, 105, 121, 0.75)), url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            animation: zoomBg 20s infinite alternate;
+        }
+
+        @keyframes zoomBg {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsive font size */
+            margin-bottom: 1.5rem;
+            color: white;
+            font-weight: 800;
+            letter-spacing: -1px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: #dbe4e6; /* Slight tint for readability on teal */
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+        .btn-outline:hover { 
+            background: white; 
+            color: var(--primary); 
+            border-color: white;
+        }
+
+        /* --- SERVICES GRID --- */
+        .services {
+            padding: 8rem 2rem;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        .section-header span {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .section-header h2 { 
+            font-size: clamp(2rem, 4vw, 3rem); 
+            position: relative;
+            display: inline-block;
+        }
+        /* Decorative line under header */
+        .section-header h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .service-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: transparent;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Background hover effect - adjusted for new colors */
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(224, 159, 62, 0.08) 0%, rgba(255,255,255,0) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .service-card:hover::after { opacity: 1; }
+
+        /* Accent line on top */
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .service-card:hover::before { transform: scaleX(1); }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(46, 105, 121, 0.08); /* Light primary */
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover .icon-box {
+            background: var(--accent);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .service-card h3 { margin-bottom: 1rem; font-size: 1.4rem; font-weight: 700; }
+        .service-card p { color: var(--text-light); font-size: 1rem; line-height: 1.7; }
+
+        /* --- PORTFOLIO SLIDESHOW --- */
+        .portfolio {
+            padding: 4rem 2rem;
+            background-color: var(--bg-white);
+            border-top: 1px solid var(--border);
+        }
+
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Hide images by default */
+        .mySlides {
+            display: none;
+            position: relative;
+        }
+        
+        /* Force images to be same height for consistency */
+        .mySlides img {
+            height: 500px; 
+            width: 100%;
+            object-fit: cover;
+            vertical-align: middle;
+        }
+
+        /* Next & previous buttons */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(46, 105, 121, 0.4); /* Primary translucent */
+            backdrop-filter: blur(2px);
+        }
+
+        /* Position the "next button" to the right */
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: var(--accent);
+        }
+
+        /* Caption text */
+        .text {
+            color: #f2f2f2;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(46, 105, 121, 0.9); /* Primary */
+            border-radius: 4px;
+            width: auto;
+            text-align: center;
+        }
+
+        /* Number text (1/3 etc) */
+        .numbertext {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+            background: rgba(0,0,0,0.5);
+            border-bottom-right-radius: 8px;
+        }
+
+        /* The dots/bullets/indicators */
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 4px;
+            background-color: #cbd5e1;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .dot.active, .dot:hover {
+            background-color: var(--accent);
+        }
+
+        /* Fading animation */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
+        /* --- LOCATION / ABOUT --- */
+        .location-section {
+            background: var(--bg-light);
+            padding: 6rem 2rem;
+            position: relative;
+        }
+        
+        .location-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .loc-map-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            height: 450px;
+            transform: perspective(1000px) rotateY(2deg);
+            transition: transform 0.5s ease;
+            background-color: #ddd; /* Placeholder color for map */
+        }
+        .loc-map-wrapper:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .feature-list {
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        .feature-list i { 
+            color: var(--accent); 
+            background: rgba(224, 159, 62, 0.15); /* Accent tint */
+            padding: 8px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+        }
+
+        .address-card {
+            background: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Subtle pattern overlay for footer */
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+        
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            height: 60px;
+            width: auto;
+            margin-bottom: 1.5rem;
+            filter: brightness(0) invert(1); 
+            opacity: 0.95;
+        }
+
+        .footer-about p { color: #dbe4e6; line-height: 1.8; margin-bottom: 2rem; max-width: 350px; }
+
+        .footer-col h4 { color: white; margin-bottom: 1.5rem; font-size: 1.2rem; letter-spacing: 1px; }
+        .footer-col ul li { margin-bottom: 1rem; }
+        .footer-col ul li a { color: #dbe4e6; font-size: 0.95rem; display: inline-block; }
+        .footer-col ul li a:hover { color: var(--accent); transform: translateX(5px); }
+
+        .social-icons { display: flex; gap: 1rem; }
+        .social-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .social-btn:hover { background: var(--accent); transform: translateY(-3px); }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 4rem;
+            padding-top: 2rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 968px) {
+            .hero h1 { font-size: 3.5rem; }
+            .location-container { grid-template-columns: 1fr; }
+            .loc-map-wrapper { height: 350px; transform: none; }
+            .footer-content { grid-template-columns: 1fr; gap: 3rem; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { 
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: var(--shadow-lg);
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); /* Hidden by default */
+                transition: all 0.4s ease-in-out;
+            }
+            .nav-links.active {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            
+            .menu-toggle { display: block; }
+            .cta-btn.mobile-hidden { display: none; }
+            
+            .hero-btns { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
+            .btn-outline, .cta-btn { width: 100%; justify-content: center; }
+            
+            .feature-list { grid-template-columns: 1fr; }
+
+            /* Mobile adjustments for slideshow */
+            .mySlides img { height: 300px; }
+            .prev, .next { padding: 10px; }
+            .text { font-size: 1rem; width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo-link">
+                <img src="./assets/brave-group.png" alt="Brave Builder's Logo" class="main-logo">
+            </a>
+            
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#work">Our Work</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#location">Location</a></li>
+<a style="width: fit-content;" class="cta-btn" onclick="window.open('https://www.instagram.com/bravegroup_/?hl=en')">
+                    <i class="fa-brands fa-instagram"></i> Follow Us
+                </a>
+            </ul>
+
+                
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Brave Builders <br> We Build Your Vision <br>From the Ground Up.</h1>
+            <h3></h3>
+            <p>Expert Planning, 3D Elevation, and Construction services in Maghar & Sant Kabir Nagar.</p>
+            <div class="hero-btns">
+                <a href="#services" class="cta-btn">Explore Services</a>
+                <a href="#location" class="btn-outline">Find Us</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="section-header reveal">
+            <span>What We Do</span>
+            <h2>Comprehensive Construction Solutions</h2>
+        </div>
+        
+        <div class="grid">
+            <div class="service-card reveal">
+                <div class="icon-box"><i class="fa-solid fa-compass-drafting"></i></div>
+                <h3>Planning</h3>
+                <p>Strategic layout planning tailored to your land and lifestyle requirements. We maximize space and utility.</p>
+            </div>
+
+            <div class="service-card reveal">
+                <div class="icon-box"><i class="fa-solid fa-cubes"></i></div>
+                <h3>3D Elevation</h3>
+                <p>Visualize your dream home with photorealistic 3D modeling before we lay a single brick. See it before you build it.</p>
+            </div>
+
+            <div class="service-card reveal">
+                <div class="icon-box"><i class="fa-solid fa-ruler-combined"></i></div>
+                <h3>Structural Design</h3>
+                <p>Ensuring safety and longevity with precise engineering and load calculations for a rock-solid foundation.</p>
+            </div>
+
+            <div class="service-card reveal">
+                <div class="icon-box"><i class="fa-solid fa-calculator"></i></div>
+                <h3>Estimation</h3>
+                <p>Transparent, accurate material and cost estimation to keep your project within budget without surprises.</p>
+            </div>
+
+            <div class="service-card reveal">
+                <div class="icon-box"><i class="fa-solid fa-trowel-bricks"></i></div>
+                <h3>Construction</h3>
+                <p>Full-scale construction services managed by experienced professionals using high-grade materials.</p>
+            </div>
+
+            <div class="service-card reveal">
+                <div class="icon-box"><i class="fa-solid fa-couch"></i></div>
+                <h3>Interior Design</h3>
+                <p>Modern interior solutions, PVC work, and premium finishing touches for a beautiful, livable home.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio" id="work">
+        <div class="section-header reveal">
+            <span>Our Portfolio</span>
+            <h2>Recent Projects</h2>
+        </div>
+
+        <div class="slideshow-container reveal">
+            <div class="mySlides fade">
+                <div class="numbertext">1 / 3</div>
+                <img src="https://images.unsplash.com/photo-1600596542815-e328d4de4bf7?q=80&w=2000&auto=format&fit=crop" alt="Modern Villa">
+                <div class="text">Modern Villa Design</div>
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">2 / 3</div>
+                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2000&auto=format&fit=crop" alt="Luxury Interior">
+                <div class="text">Luxury Interior Finishing</div>
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">3 / 3</div>
+                <img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?q=80&w=2000&auto=format&fit=crop" alt="Commercial Building">
+                <div class="text">Commercial Complex Structure</div>
+            </div>
+
+            <a class="prev" onclick="plusSlides(-1)">❮</a>
+            <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+        <br>
+
+        <div style="text-align:center">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+    </section>
+
+    <section class="location-section" id="about">
+        <div class="location-container">
+            <div class="loc-text reveal">
+                <span style="color:var(--accent); font-weight:800; letter-spacing:2px; font-size:0.9rem;">WHY CHOOSE BRAVE BUILDER'S?</span>
+                <h2 style="font-size: clamp(2rem, 4vw, 3rem); margin:1rem 0 2rem 0;">Building Trust in <br>Sant Kabir Nagar</h2>
+                <p style="color:var(--text-light); margin-bottom:2rem;">
+                    We aren't just builders; we are partners in creating your legacy. With a focus on transparency and quality, Brave Builder's ensures every project stands the test of time.
+                </p>
+                
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> A Unit of Brave Group</li>
+                    <li><i class="fa-solid fa-check"></i> Complete Project Management</li>
+                    <li><i class="fa-solid fa-check"></i> High-Quality Materials</li>
+                    <li><i class="fa-solid fa-check"></i> Transparent Estimation</li>
+                </ul>
+
+                <div class="address-card" id="location">
+                    <p style="font-weight: 800; margin-bottom: 0.5rem; color:var(--primary); display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-map-location-dot" style="color:var(--accent);"></i> Visit Our Office:
+                    </p>
+                    <p style="color:var(--text-dark);">
+                        Aiwan-e-ahmad Suti mill road,<br>
+                        Maghar, District-Sant kabir nagar,<br>
+                        India 272173
+                    </p>
+                </div>
+            </div>
+            
+            <div class="loc-map-wrapper reveal">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3564.084297106752!2d83.125!3d26.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDQyJzAwLjAiTiA4M8KwMDcnMzAuMCJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+<iframe src="https://form.finalform.so/forms/1r2fJEcv" width="100%" height="600px" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col footer-about">
+                <img src="./assets/brave-group.png" alt="Brave Builder's Logo" class="footer-logo">
+                <p>Turning blueprints into reality. Your trusted partner for residential & commercial construction in Maghar. We build with integrity.</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/bravegroup_/?hl=en" target="_blank" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#">House Planning</a></li>
+                    <li><a href="#">Interior Design</a></li>
+                    <li><a href="#">PVC & False Ceilings</a></li>
+                    <li><a href="#">Structural Consulting</a></li>
+                    <li><a href="#">Renovation</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-location-dot" style="color:var(--accent); margin-right:10px;"></i> 
+                        Maghar, Sant Kabir Nagar
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-phone" style="color:var(--accent); margin-right:10px;"></i> 
+                        +91 98765 43210
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-envelope" style="color:var(--accent); margin-right:10px;"></i> 
+                        contact@bravebuilders.com
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2024 Brave Builder's - A Unit of Brave Group. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. HEADER SCROLL EFFECT ---
+        const header = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- 2. MOBILE MENU TOGGLE ---
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Change icon from hamburger to X
+            const icon = menuToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // --- 3. SCROLL REVEAL ANIMATION ---
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, {
+            root: null,
+            threshold: 0.15, // Trigger when 15% of element is visible
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- 4. SLIDESHOW LOGIC ---
+        let slideIndex = 1;
+        
+        // Initialize slideshow
+        showSlides(slideIndex);
+        
+        // Auto-scroll every 5 seconds
+        let slideInterval = setInterval(() => {
+            plusSlides(1);
+        }, 5000);
+
+        function plusSlides(n) {
+            clearInterval(slideInterval); // Reset timer on manual click
+            showSlides(slideIndex += n);
+            slideInterval = setInterval(() => plusSlides(1), 5000); // Restart timer
+        }
+
+        function currentSlide(n) {
+            clearInterval(slideInterval);
+            showSlides(slideIndex = n);
+            slideInterval = setInterval(() => plusSlides(1), 5000);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            
+            slides[slideIndex-1].style.display = "block";
+            dots[slideIndex-1].className += " active";
+        }
+    </script>
+</body>
+</html>
